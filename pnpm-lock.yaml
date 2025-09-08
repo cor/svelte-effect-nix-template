@@ -6,7 +6,9 @@ settings:
 
 importers:
 
-  .:
+  .: {}
+
+  app:
     devDependencies:
       '@eslint/compat':
         specifier: ^1.2.5

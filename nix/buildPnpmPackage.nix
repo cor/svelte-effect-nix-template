@@ -6,14 +6,14 @@
 { pkgs, lib, ... }:
 args@{
   # to derive pname and version
-  packageJsonPath,
-  # to provision sources additional to monorepo boilerplate
-  extraSrcs,
-  # workspace project names required for build (e.g. anything with "workspace:*" verison declaration)
-  pnpmWorkspaces ? [ ],
-  hash ? lib.fakeHash,
-  pnpm ? pkgs.pnpm,
-  ...
+  packageJsonPath
+, # to provision sources additional to monorepo boilerplate
+  extraSrcs
+, # workspace project names required for build (e.g. anything with "workspace:*" verison declaration)
+  pnpmWorkspaces ? [ ]
+, hash ? lib.fakeHash
+, pnpm ? pkgs.pnpm
+, ...
 }:
 
 let
@@ -25,8 +25,8 @@ let
         [
           # ./../package.json
           # ../patches
-          # ../pnpm-lock.yaml
-          # ../pnpm-workspace.yaml
+          ../pnpm-lock.yaml
+          ../pnpm-workspace.yaml
           # ../tsconfig.base.json
           # ../vitest.setup.ts
           # ../vitest.shared.ts
@@ -50,7 +50,7 @@ let
 in
 pkgs.buildNpmPackage (
   args
-  // rec {
+    // rec {
     inherit
       pname
       pnpmDeps
