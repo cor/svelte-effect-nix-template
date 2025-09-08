@@ -18,20 +18,29 @@
         packages =
           let
             packageJSON = lib.importJSON ./package.json;
+            buildPnpmPackage = import ./nix/buildPnpmPackage.nix {
+              inherit pkgs lib;
+            };
           in
           {
-            app = pkgs.buildNpmPackage {
-              npmDepsHash = "sha256-27tdB41x6kexeQ44wMwGlxpvLS9E7xxaDP99lZcqFfo=";
-              src = ./.;
-              pname = packageJSON.name;
-              inherit (packageJSON) version;
+            app = buildPnpmPackage {
+              hash = "sha256-LtkpP1e597k4r3cRjHPI8Zh/clUfAh10UZf3/WZJYeg=";
+              extraSrcs = [
+                ./.
+              ];
+              packageJsonPath = ./package.json;
+              buildPhase = ''
+                runHook preBuild
+                pnpm --filter=app build
+                runHook postBuild
+              '';
               installPhase = ''
                 mkdir -p $out
                 cp -r ./build/* $out
               '';
               doCheck = true;
               checkPhase = ''
-                npm run test
+                pnpm run test
               '';
               doDist = false;
             };
@@ -73,6 +82,7 @@
             nodePackages_latest."@tailwindcss/language-server"
             nodePackages_latest.typescript-language-server
             nodePackages_latest.vscode-langservers-extracted
+            pnpm
             config.treefmt.build.wrapper
           ];
         };
