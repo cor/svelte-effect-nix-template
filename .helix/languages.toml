@@ -1,0 +1,13 @@
+[language-server.tailwindcss-ls]
+args    = ["--stdio"]
+command = "tailwindcss-language-server"
+
+[[language]]
+auto-format      = true
+file-types       = ["svelte"]
+formatter        = { command = "treefmt", args = ["--stdin", ".svelte"] }
+language-servers = ["svelteserver", "tailwindcss-ls"]
+name             = "svelte"
+roots            = ["svelte.config.js"]
+scope            = "source.svelte"
+

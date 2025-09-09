@@ -12,57 +12,10 @@
       systems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" "x86_64-darwin" ];
       imports = [
         treefmt-nix.flakeModule
+        ./app/app.nix
       ];
 
       perSystem = { config, self', inputs', pkgs, lib, system, ... }: {
-        packages =
-          let
-            packageJSON = lib.importJSON ./package.json;
-          in
-          {
-            app = pkgs.buildNpmPackage {
-              npmDepsHash = "sha256-27tdB41x6kexeQ44wMwGlxpvLS9E7xxaDP99lZcqFfo=";
-              src = ./.;
-              pname = packageJSON.name;
-              inherit (packageJSON) version;
-              installPhase = ''
-                mkdir -p $out
-                cp -r ./build/* $out
-              '';
-              doCheck = true;
-              checkPhase = ''
-                npm run test
-              '';
-              doDist = false;
-            };
-            default = self'.packages.app;
-          };
-
-        apps = {
-          dev = {
-            type = "app";
-            program = pkgs.writeShellApplication {
-              name = "app-dev-server";
-              runtimeInputs = [ pkgs.nodejs ];
-              text = ''
-                npm install
-                npm run dev
-              '';
-            };
-          };
-          preview = {
-            type = "app";
-            program = pkgs.writeShellApplication {
-              name = "preview-app";
-              runtimeInputs = [ pkgs.miniserve ];
-              text = ''
-                miniserve --spa --index index.html --port 8080 ${self'.packages.app}
-              '';
-            };
-          };
-          default = self'.apps.preview;
-        };
-
         devShells.default = pkgs.mkShell {
           name = "app-devshell";
           buildInputs = with pkgs; [
@@ -73,6 +26,7 @@
             nodePackages_latest."@tailwindcss/language-server"
             nodePackages_latest.typescript-language-server
             nodePackages_latest.vscode-langservers-extracted
+            pnpm
             config.treefmt.build.wrapper
           ];
         };
