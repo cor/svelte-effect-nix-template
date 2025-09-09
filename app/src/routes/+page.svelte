@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Effect } from 'effect';
+	import { PUBLIC_GIT_REV, PUBLIC_LAST_MODIFIED_DATE } from '$env/static/public';
 
 	let state: { result: string; count: number } = $state({
 		result: 'Loading...',
@@ -43,4 +44,7 @@
 			Increment with Effect
 		</button>
 	</div>
+</div>
+<div class="absolute bottom-0 right-0">
+	{PUBLIC_GIT_REV} | {PUBLIC_LAST_MODIFIED_DATE}
 </div>
