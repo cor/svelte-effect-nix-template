@@ -6,12 +6,10 @@ _: {
     , gitShortRev
     , lastModified
     , lastModifiedDate
+    , buildPnpmPackage
     , ...
     }:
     let
-      buildPnpmPackage = import ../nix/buildPnpmPackage.nix {
-        inherit pkgs lib;
-      };
       PUBLIC_GIT_REV = self'.shortRev or (self'.dirtyShortRev or "dirty");
       PUBLIC_LAST_MODIFIED_DATE = self'.lastModifiedDate or "1970-01-01T00:00:00Z";
       PUBLIC_LAST_MODIFIED_EPOCH = if self' ? lastModified then builtins.toString self'.lastModified else "0";
@@ -23,7 +21,7 @@ _: {
           extraSrcs = [
             ../app
           ];
-          hash = "sha256-LtkpP1e597k4r3cRjHPI8Zh/clUfAh10UZf3/WZJYeg=";
+          hash = "sha256-p2/UqetErG5AHlUI2+GFakv4Zbce4MgluVEVpj2F8cI=";
           pnpmWorkspaces = [ "app" ];
           buildPhase = ''
             runHook preBuild
