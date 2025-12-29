@@ -1,18 +1,20 @@
 _: {
   perSystem =
-    { self'
-    , pkgs
-    , lib
-    , gitShortRev
-    , lastModified
-    , lastModifiedDate
-    , buildPnpmPackage
-    , ...
+    {
+      self',
+      pkgs,
+      lib,
+      gitShortRev,
+      lastModified,
+      lastModifiedDate,
+      buildPnpmPackage,
+      ...
     }:
     let
       PUBLIC_GIT_REV = self'.shortRev or (self'.dirtyShortRev or "dirty");
       PUBLIC_LAST_MODIFIED_DATE = self'.lastModifiedDate or "1970-01-01T00:00:00Z";
-      PUBLIC_LAST_MODIFIED_EPOCH = if self' ? lastModified then builtins.toString self'.lastModified else "0";
+      PUBLIC_LAST_MODIFIED_EPOCH =
+        if self' ? lastModified then builtins.toString self'.lastModified else "0";
     in
     {
       packages = {
@@ -84,4 +86,3 @@ _: {
       };
     };
 }
-

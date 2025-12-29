@@ -7,15 +7,36 @@
     treefmt-nix.url = "github:numtide/treefmt-nix";
   };
 
-  outputs = inputs@{ self, nixpkgs, flake-parts, treefmt-nix, ... }:
+  outputs =
+    inputs@{
+      self,
+      nixpkgs,
+      flake-parts,
+      treefmt-nix,
+      ...
+    }:
     flake-parts.lib.mkFlake { inherit inputs; } {
-      systems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" "x86_64-darwin" ];
+      systems = [
+        "x86_64-linux"
+        "aarch64-linux"
+        "aarch64-darwin"
+        "x86_64-darwin"
+      ];
       imports = [
         treefmt-nix.flakeModule
         ./app/app.nix
       ];
 
-      perSystem = { config, self', inputs', pkgs, lib, system, ... }:
+      perSystem =
+        {
+          config,
+          self',
+          inputs',
+          pkgs,
+          lib,
+          system,
+          ...
+        }:
         let
           pnpm = pkgs.pnpm_10;
           nodejs = pkgs.nodejs-slim_24;
@@ -29,7 +50,12 @@
 
           devShells.default = pkgs.mkShell {
             name = "app-devshell";
-            buildInputs = [ pnpm nodejs ] ++ (with pkgs; [
+            buildInputs = [
+              pnpm
+              nodejs
+            ]
+            ++ (with pkgs; [
+              biome
               nodePackages_latest.nodejs
               nodePackages_latest.graphqurl
               nodePackages_latest.svelte-language-server
@@ -40,28 +66,7 @@
             ]);
           };
 
-          treefmt = {
-            projectRootFile = "flake.nix";
-            programs = {
-              prettier = {
-                enable = true;
-                package = pkgs.nodePackages.prettier;
-                includes = [
-                  "*.ts"
-                  "*.js"
-                  "*.json"
-                  "*.md"
-                  "*.svelte"
-                  "*.html"
-                  "*.css"
-                ];
-              };
-              nixpkgs-fmt = {
-                enable = true;
-                includes = [ "*.nix" ];
-              };
-            };
-          };
+          treefmt = import ./nix/treefmt.nix { inherit pkgs; };
         };
 
       flake.templates.default = {
