@@ -18,7 +18,7 @@ git init
 To build the app, run:
 
 ```bash
-nix build .#app
+nix build .#app -L
 ```
 
 This will:
@@ -66,7 +66,7 @@ nix develop
 
 This provides:
 
-- Node.js and npm
+- Node.js and pnpm
 - TypeScript language server
 - Svelte language server
 - Tailwind CSS language server
@@ -80,7 +80,23 @@ Format all code in the project with:
 nix fmt
 ```
 
-This uses:
+This project uses [treefmt](https://github.com/numtide/treefmt) to orchestrate multiple formatters and linters through a single command. The configuration is defined in `nix/treefmt.nix`.
 
-- Prettier to format TypeScript, JavaScript, JSON, Markdown, Svelte, HTML, and CSS files according to the project's configuration in `.prettierrc`
-- nixpkgs-fmt to format Nix files
+#### Formatters
+
+| Tool | File Types |
+|------|------------|
+| [Biome](https://biomejs.dev) | TypeScript, JavaScript, CSS, JSON, JSONC, TSX, JSX, GraphQL, HTML, Svelte, Astro |
+| [nixfmt-rfc-style](https://github.com/NixOS/nixfmt) | Nix |
+| [taplo](https://taplo.tamasfe.dev) | TOML |
+| [yamlfmt](https://github.com/google/yamlfmt) | YAML |
+| [mdformat](https://github.com/executablebooks/mdformat) | Markdown |
+
+#### Linters
+
+| Tool | Purpose |
+|------|---------|
+| [Biome](https://biomejs.dev) | JavaScript/TypeScript linting with recommended rules |
+| [statix](https://github.com/nerdypepper/statix) | Nix linting |
+| [deadnix](https://github.com/astro/deadnix) | Detect unused Nix code |
+| [shellcheck](https://www.shellcheck.net) | Shell script analysis |
